@@ -168,48 +168,48 @@
 //   );
 // }
 
-"use client";
+// // "use client";
 
-import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+// // import { motion } from "framer-motion";
+// // import { useRouter } from "next/navigation";
 
-export default function WorkshopDoors() {
-  const router = useRouter();
+// // export default function WorkshopDoors() {
+// //   const router = useRouter();
 
-  const doors = [
-    { id: 1, title: "Magic Shop System", path: "/level2/ch1", color: "#7B3FF3" },
-    { id: 2, title: "Monster Stats Analyzer", path: "/level2/ch2", color: "#21D4FD" },
-    { id: 3, title: "Refactor Apprentice’s Mess", path: "/level2/ch3", color: "#F9D423" },
-  ];
+// //   const doors = [
+// //     { id: 1, title: "Magic Shop System", path: "/level2/ch1", color: "#7B3FF3" },
+// //     { id: 2, title: "Monster Stats Analyzer", path: "/level2/ch2", color: "#21D4FD" },
+// //     { id: 3, title: "Refactor Apprentice’s Mess", path: "/level2/ch3", color: "#F9D423" },
+// //   ];
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0B0C1D] to-[#20274A] flex flex-col items-center justify-center text-white p-8">
-      <h1 className="text-4xl font-bold mb-6">🔮 The Workshop of Ideas</h1>
-      <p className="text-center text-gray-300 max-w-xl mb-10">
-        Master Arwen: “Choose a door, young builder. Each one hides a new challenge!”
-      </p>
+// //   return (
+// //     <div className="min-h-screen bg-gradient-to-b from-[#0B0C1D] to-[#20274A] flex flex-col items-center justify-center text-white p-8">
+// //       <h1 className="text-4xl font-bold mb-6">🔮 The Workshop of Ideas</h1>
+// //       <p className="text-center text-gray-300 max-w-xl mb-10">
+// //         Master Arwen: “Choose a door, young builder. Each one hides a new challenge!”
+// //       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-        {doors.map((door) => (
-          <motion.div
-            key={door.id}
-            whileHover={{ scale: 1.05, boxShadow: `0 0 20px ${door.color}` }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => router.push(door.path)}
-            className="cursor-pointer bg-[#151A33] rounded-2xl p-6 border border-[#2B2F55] text-center hover:bg-[#1F244A] transition-all"
-          >
-            <div
-              className="mx-auto mb-4 h-40 w-24 rounded-md"
-              style={{
-                background: `linear-gradient(to bottom, ${door.color}44, ${door.color}11)`,
-                border: `2px solid ${door.color}`,
-                boxShadow: `0 0 15px ${door.color}55`,
-              }}
-            />
-            <h2 className="text-xl font-semibold">{door.title}</h2>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
+// //       <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+// //         {doors.map((door) => (
+// //           <motion.div
+// //             key={door.id}
+// //             whileHover={{ scale: 1.05, boxShadow: `0 0 20px ${door.color}` }}
+// //             whileTap={{ scale: 0.98 }}
+// //             onClick={() => router.push(door.path)}
+// //             className="cursor-pointer bg-[#151A33] rounded-2xl p-6 border border-[#2B2F55] text-center hover:bg-[#1F244A] transition-all"
+// //           >
+// //             <div
+// //               className="mx-auto mb-4 h-40 w-24 rounded-md"
+// //               style={{
+// //                 background: `linear-gradient(to bottom, ${door.color}44, ${door.color}11)`,
+// //                 border: `2px solid ${door.color}`,
+// //                 boxShadow: `0 0 15px ${door.color}55`,
+// //               }}
+// //             />
+// //             <h2 className="text-xl font-semibold">{door.title}</h2>
+// //           </motion.div>
+// //         ))}
+// //       </div>
+// //     </div>
+// //   );
+// // }

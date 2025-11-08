@@ -9,8 +9,9 @@ export class Level extends Document {
   @Prop({ required: true })
   name: string; // e.g. "Level 2: The Rune of Functions"
 
-  @Prop({ required: true })
-  description: string; // Narrative intro or story setup
+@Prop({ type: [{ speaker: String, text: String }], required: true })
+dialog: { speaker: string; text: string }[];
+
 
   @Prop({ type: [String], default: [] })
   objectives: string[]; // e.g. ["Decompose problems", "Design reusable methods"]
@@ -30,9 +31,7 @@ export class Level extends Document {
   @Prop({ type: String, default: null })
   nextLevelId: string | null;
 
-  // Optional game/narrative fields
-  @Prop({ default: 'Unknown Mentor' })
-  mentor: string;
+
 
   @Prop({ default: 'Normal' })
   difficulty: string;

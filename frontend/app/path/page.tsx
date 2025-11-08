@@ -6,6 +6,11 @@ import { motion } from "framer-motion";
 export default function HomePage() {
   const router = useRouter();
 
+  const openGame = () => {
+    // full URL of your Phaser game's dev server
+    window.location.href = "http://localhost:5173/";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-900 via-indigo-900 to-purple-900 text-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
       {/* Magical Glow Overlay */}
@@ -41,7 +46,7 @@ export default function HomePage() {
         className="flex flex-col sm:flex-row gap-6"
       >
         <button
-          onClick={() => router.push("/levels")}
+          onClick={openGame}
           className="px-10 py-5 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-pink-500 hover:to-purple-500 text-white font-bold shadow-lg transition-all hover:scale-105"
         >
           School of Decomposition

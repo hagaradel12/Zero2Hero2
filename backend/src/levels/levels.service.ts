@@ -29,5 +29,10 @@ async create(levelData: Partial<Level>): Promise<Level> {
     return this.levelModel.findOne({ name }).exec();
   }
 
+    async findDialogByLevelId(id: string) {
+    const level = await this.levelModel.findById(id, 'dialog name order').exec();
+    return level?.dialog || [];
+  }
+
 
 }

@@ -20,7 +20,11 @@ async getLevel(@Param('id') id: string) {
   }
   return level;
 }
-
+  @Public()
+  @Get(':id/dialog')
+  async getDialogByLevel(@Param('id') id: string) {
+    return this.levelsService.findDialogByLevelId(id);
+  }
     
 }
 

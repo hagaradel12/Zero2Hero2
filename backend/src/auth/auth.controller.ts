@@ -41,15 +41,16 @@ export class AuthController {
     response.clearCookie('token');
     return { message: 'Logged out successfully' };
   }
-
-  @Get('me')
-  async getProfile(@Req() req: any) {
-    const token = req.cookies?.token || req.headers['authorization']?.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedException('Not authenticated');
-    }
-    
-    const decoded = await this.authService.validateToken(token);
-    return decoded;
+  
+  @Public()
+@Get('me') // You're calling /auth/profile but the endpoint is /auth/me
+async getProfile(@Req() req: any) {
+  const token = req.cookies?.token || req.headers['authorization']?.split(' ')[1];
+  if (!token) {
+    throw new UnauthorizedException('Not authenticated');
   }
+  
+  const decoded = await this.authService.validateToken(token);
+  return decoded;
+}
 }

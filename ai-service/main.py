@@ -377,13 +377,14 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
 import re
+from huggingface_hub import InferenceClient
 
 # ----------------------------------------------------
 # 🔧 Setup
 # ----------------------------------------------------
 load_dotenv()
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY2")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 MODEL_NAME = os.getenv("OPENROUTER_MODEL", "qwen/qwen-2.5-72b-instruct:free")
 
 app = FastAPI(title="AI Review Service")
@@ -392,6 +393,7 @@ client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=OPENROUTER_API_KEY,
 )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -703,6 +705,7 @@ Your job:
 - Mention one or two strengths.
 - Point out the most important gap.
 - End with a next-step hint (short, motivating, no code spoilers).
+- ignore typo's
 
 🎯 Output strictly as JSON:
 
