@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDocument, Users } from './users.schema';
@@ -87,5 +87,43 @@ export class UsersService {
       { $set: updateUserDto },
       { new: true },
     );
+  }
+
+//   async updateQuestionProgress(email: string, questionId: string, nextQuestionIndex: number) {
+//   return this.userModel.findOneAndUpdate(
+//     { email },
+//     {
+//       $addToSet: { solvedQuestions: questionId }, // avoid duplicates
+//       $set: { currentQuestionIndex: nextQuestionIndex },
+//     },
+//     { new: true },
+//   );
+// }
+
+
+  // Update question progress
+  async updateQuestionProgress(
+    email: string,
+    questionId: string,
+    nextQuestionIndex: number,
+  ) {
+    const user = await this.userModel.findOne({ email }).exec();
+    
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    // Add question to solved list if not already there
+    if (!user.solvedQuestions.includes(questionId)) {
+      user.solvedQuestions.push(questionId);
+    }
+
+    // Update question index
+    user.currentQuestionIndex = nextQuestionIndex;
+
+    await user.save();
+
+    console.log(`✅ Updated question progress for ${email}`);
+    return user;
   }
 }

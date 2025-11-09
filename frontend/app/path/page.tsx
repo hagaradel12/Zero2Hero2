@@ -7,8 +7,8 @@ export default function HomePage() {
   const router = useRouter();
 
   const openGame = () => {
-    // full URL of your Phaser game's dev server
-    window.location.href = "http://localhost:5173/";
+    // ✅ Navigate to internal Phaser route instead of reloading
+    router.push("/game");
   };
 
   return (

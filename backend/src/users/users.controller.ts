@@ -23,4 +23,20 @@ export class UsersController {
   ) {
     return this.usersService.updateUserByEmail(email, updateUserDto);
   }
+
+  @Public()
+  @Get('progress/:userId')
+  async getUserProgress(@Param('userId') userId: string) {
+    return this.usersService.getUserProgress(userId);
+  }
+  
+  @Public()
+@Put('progress/:email')
+async updateQuestionProgress(
+  @Param('email') email: string,
+  @Body() body: { questionId: string; nextQuestionIndex: number }
+) {
+  return this.usersService.updateQuestionProgress(email, body.questionId, body.nextQuestionIndex);
+}
+
 }

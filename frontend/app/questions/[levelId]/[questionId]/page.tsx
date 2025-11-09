@@ -134,6 +134,7 @@ export default function QuestionSolvePage() {
               initialCode={code}
               userId={userId}
               questionId={questionId}
+              levelId={levelId} // ✅ FIXED: Now passing levelId
               onRunCode={(updatedCode) => setCode(updatedCode)}
               onSubmitCode={() => {
                 toast({

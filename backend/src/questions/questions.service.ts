@@ -119,7 +119,7 @@ async useHint(userId: string, questionId: string, code: string, language: string
   }
 
   // 🏁 Finish Question → Updates XP, Streak, and marks question as completed
- async finishQuestion(userId: string, questionId: string, finalScore: number) {
+ async finishQuestion(userId: string, questionId: string, finalScore: number, levelId: string) {
   if (!Types.ObjectId.isValid(userId)) {
     throw new BadRequestException('Invalid userId');
   }
@@ -182,6 +182,7 @@ async useHint(userId: string, questionId: string, code: string, language: string
     xpEarned,
     totalXP: user.xp,
     streak: user.streak,
+    levelId
   };
 }
 

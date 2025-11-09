@@ -7,6 +7,8 @@ import { QuestionsService } from './questions.service';
 import { QuestionsController } from './questions.controller';
 import { QuestionsSeeder } from './question.seed';
 import { LevelsModule } from '../levels/levels.module'; // ✅ add this import
+import { User } from 'lucide-react';
+import { UsersService } from 'src/users/users.service';
 
 @Module({
   imports: [
@@ -18,7 +20,7 @@ import { LevelsModule } from '../levels/levels.module'; // ✅ add this import
     LevelsModule, // ✅ import LevelsModule here
   ],
   controllers: [QuestionsController],
-  providers: [QuestionsService, QuestionsSeeder],
-  exports: [QuestionsService, MongooseModule],
+  providers: [QuestionsService, QuestionsSeeder, UsersService],
+  exports: [QuestionsService, MongooseModule, UsersService],
 })
 export class QuestionsModule {}

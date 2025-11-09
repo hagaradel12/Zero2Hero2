@@ -1,15 +1,16 @@
-import IntroScene from "../scenes/introScene";
-
-
-export const gameConfig = {
+import * as Phaser from "phaser";
+import { IntroScene } from "../scenes/IntroScene";
+import {Scene1} from "../scenes/scene2";
+const config = {
   type: Phaser.AUTO,
-  parent: "game-container",
+  parent: "phaser-container",
   width: 1280,
   height: 720,
-  backgroundColor: "#000",
-  scene: [Scene2, IntroScene],
   physics: {
     default: "arcade",
-    arcade: { debug: false },
+    arcade: { gravity: {x:0 ,y: 0 }, debug: false },
   },
+  scene: [IntroScene, Scene1],
 };
+
+export default config;

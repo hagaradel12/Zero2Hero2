@@ -16,4 +16,12 @@ export class UpdateUserDto {
   @IsOptional()
   @IsArray()
   solvedQuestions?: string[];
+
+  @IsOptional()
+  @IsNumber()
+  currentQuestionIndex?: number;
+
+  @IsOptional()
+  currentLevel?: string;
+
 }

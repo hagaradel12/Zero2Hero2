@@ -39,6 +39,9 @@ export class Users {
 
   @Prop({type: Number, default:50})
   Hints: number;
+
+  @Prop({ type: Number, default: 0 })
+  currentQuestionIndex: number;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users);
