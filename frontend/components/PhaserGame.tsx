@@ -1,37 +1,49 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface PhaserGameProps {
   startScene?: string;
 }
 
 export default function PhaserGame({ startScene = "IntroScene" }: PhaserGameProps) {
+  const gameRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    let game: any;
+    // ✅ Prevent creating multiple game instances
+    if (gameRef.current) return;
 
     const initPhaser = async () => {
       const Phaser = await import("phaser");
       const configModule = await import("../game-interface/config/gameConfig");
-      const config = configModule.default;
+      const config = { ...configModule.default }; // Clone config
 
-      // ✅ Correct dynamic import from scenes folder
-      const sceneClass = await import(`../game-interface/scenes/${startScene}`).then(
-        (mod) => mod[startScene]
-      );
+      // // ✅ Always load ALL scenes, let state manager decide which to start
+      // const { IntroScene } = await import("../game-interface/scenes/IntroScene");
+      // const { Scene1 } = await import("../game-interface/scenes/scene1");
+      // // Import other scenes as needed...
 
-      // Add the scene class to config
-      config.scene = [sceneClass];
+      // config.scene = [IntroScene, Scene1];
+
+      config.parent = "phaser-container";
 
       // Create Phaser game
-      game = new Phaser.Game(config);
+      gameRef.current = new Phaser.Game(config);
+      
+      console.log('🎮 Phaser game initialized with scene:', startScene);
     };
 
     initPhaser();
 
+    // Cleanup on unmount
     return () => {
-      if (game) game.destroy(true);
+      if (gameRef.current) {
+        console.log('🗑️ Destroying Phaser game instance');
+        gameRef.current.destroy(true);
+        gameRef.current = null;
+      }
     };
-  }, [startScene]);
+  }, []); // Empty dependency - only run once
 
-  return <div id="phaser-container" className="w-full h-full" />;
+  return <div ref={containerRef} id="phaser-container" className="w-full h-full" />;
 }

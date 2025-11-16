@@ -2,9 +2,9 @@ import DialogSystem from "./DialogSystem.js";
 import api from '../api/api.js';
 import GameStateManager from '../gameStateManager.ts';
 
-export class Scene2 extends Phaser.Scene {
+export class Scene3 extends Phaser.Scene {
   constructor() {
-    super({ key: "Scene2" });
+    super({ key: "Scene3" });
     this.dialogSystem = null;
     this.storyShown = false;
     this.userEmail = null;
@@ -13,11 +13,11 @@ export class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("scene2_bg", "/level3.jpg");
+    this.load.image("scene4_bg", "/level4.jpg");
     this.load.image("character_idle", "/characterg1.png");
     this.load.image("stone", "/potionq.png");
     this.load.image("question1p",'Icon381.png')
-    this.load.image("question2p", 'Icon4.png')
+    this.load.image("question2p", 'Icon39.png')
     
   }
 
@@ -44,7 +44,7 @@ export class Scene2 extends Phaser.Scene {
         // ✅ Initialize GameStateManager
         GameStateManager.setUserId(this.userId);
       } catch (err) {
-        console.error('❌ Authentication failed in Scene2');
+        console.error('❌ Authentication failed in Scene3');
         window.location.href = 'http://localhost:3000/login';
         return;
       }
@@ -53,13 +53,13 @@ export class Scene2 extends Phaser.Scene {
       GameStateManager.setUserId(this.userId);
     }
 
-    console.log('✅ User authenticated in Scene1:', this.userEmail);
+    console.log('✅ User authenticated in Scene3:', this.userEmail);
 
     // ✅ Save that we're in Scene1
-    await GameStateManager.saveState('Scene2', 'lvl3');
+    await GameStateManager.saveState('Scene3', 'lvl4');
 
     const { width, height } = this.scale;
-    const levelId = "lvl3";
+    const levelId = "lvl4";
 
     // ✅ Load completed questions for this level
     this.completedQuestions = await GameStateManager.getCompletedQuestions(levelId);
@@ -67,13 +67,13 @@ export class Scene2 extends Phaser.Scene {
 
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-    const bg = this.add.image(0, 0, "scene2_bg").setOrigin(0, 0);
+    const bg = this.add.image(0, 0, "scene4_bg").setOrigin(0, 0);
     bg.setDisplaySize(width, height);
 
     const startX = width * 0.22;
     const startY = height * 0.77;
     this.character = this.add.image(startX, startY, "character_idle").setOrigin(0.5);
-    const scale = (width / 1280)*1.5;
+    const scale = (width / 1280);
     this.character.setScale(scale);
 
 
@@ -88,15 +88,15 @@ export class Scene2 extends Phaser.Scene {
       this.dialogSystem.startDialog();
     });
 
-    this.createStone(width * 0.07, height * 0.38, (width / 1280) * 0.4, levelId, 0);
-    this.createStone(width * 0.58, height * 0.74, (width / 1280) * 0.4, levelId, 1);
-    this.createStone(width * 0.68, height * 0.62, (width / 1280) * 0.3, levelId, 2);
+    this.createStone(width * 0.23, height * 0.48, (width / 1280) * 0.9, levelId, 0);
+    this.createStone(width * 0.73, height * 0.48, (width / 1280) * 0.9, levelId, 1);
+    // this.createStone(width * 0.68, height * 0.62, (width / 1280) * 0.7, levelId, 2);
 
     this.createNextLevelButton();
   }
 
   createStone(x, y, scale, levelId, questionIndex) {
-    const stone = this.add.image(x, y, "question1p").setOrigin(0.5);
+    const stone = this.add.image(x, y, "question2p").setOrigin(0.5);
     stone.setScale(scale);
     stone.setDepth(2);
     stone.setInteractive({ useHandCursor: true });
@@ -269,7 +269,7 @@ export class Scene2 extends Phaser.Scene {
   
 createNextLevelButton() {
   const { width, height } = this.scale;
-  const levelId = 'lvl3'; // Change for each scene: lvl2, lvl3, lvl4, lvl5
+  const levelId = 'lvl4'; 
 
   // Create button in top-right corner
   const button = this.add.rectangle(
@@ -387,7 +387,4 @@ showMessage(message) {
       this.dialogSystem?.showNextLine();
     }
   }
-
-
-  
 }

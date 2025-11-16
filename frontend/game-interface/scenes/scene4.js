@@ -2,9 +2,9 @@ import DialogSystem from "./DialogSystem.js";
 import api from '../api/api.js';
 import GameStateManager from '../gameStateManager.ts';
 
-export class Scene2 extends Phaser.Scene {
+export class Scene4 extends Phaser.Scene {
   constructor() {
-    super({ key: "Scene2" });
+    super({ key: "Scene4" });
     this.dialogSystem = null;
     this.storyShown = false;
     this.userEmail = null;
@@ -13,11 +13,11 @@ export class Scene2 extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("scene2_bg", "/level3.jpg");
+    this.load.image("scene5_bg", "/level5.jpg");
     this.load.image("character_idle", "/characterg1.png");
     this.load.image("stone", "/potionq.png");
     this.load.image("question1p",'Icon381.png')
-    this.load.image("question2p", 'Icon4.png')
+    this.load.image("question2p", 'Icon39.png')
     
   }
 
@@ -44,7 +44,7 @@ export class Scene2 extends Phaser.Scene {
         // ✅ Initialize GameStateManager
         GameStateManager.setUserId(this.userId);
       } catch (err) {
-        console.error('❌ Authentication failed in Scene2');
+        console.error('❌ Authentication failed in Scene3');
         window.location.href = 'http://localhost:3000/login';
         return;
       }
@@ -53,13 +53,13 @@ export class Scene2 extends Phaser.Scene {
       GameStateManager.setUserId(this.userId);
     }
 
-    console.log('✅ User authenticated in Scene1:', this.userEmail);
+    console.log('✅ User authenticated in Scene3:', this.userEmail);
 
     // ✅ Save that we're in Scene1
-    await GameStateManager.saveState('Scene2', 'lvl3');
+    await GameStateManager.saveState('Scene4', 'lvl5');
 
     const { width, height } = this.scale;
-    const levelId = "lvl3";
+    const levelId = "lvl5";
 
     // ✅ Load completed questions for this level
     this.completedQuestions = await GameStateManager.getCompletedQuestions(levelId);
@@ -67,13 +67,13 @@ export class Scene2 extends Phaser.Scene {
 
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-    const bg = this.add.image(0, 0, "scene2_bg").setOrigin(0, 0);
+    const bg = this.add.image(0, 0, "scene5_bg").setOrigin(0, 0);
     bg.setDisplaySize(width, height);
 
-    const startX = width * 0.22;
+    const startX = width * 0.50;
     const startY = height * 0.77;
     this.character = this.add.image(startX, startY, "character_idle").setOrigin(0.5);
-    const scale = (width / 1280)*1.5;
+    const scale = (width / 1280);
     this.character.setScale(scale);
 
 
@@ -88,15 +88,13 @@ export class Scene2 extends Phaser.Scene {
       this.dialogSystem.startDialog();
     });
 
-    this.createStone(width * 0.07, height * 0.38, (width / 1280) * 0.4, levelId, 0);
-    this.createStone(width * 0.58, height * 0.74, (width / 1280) * 0.4, levelId, 1);
-    this.createStone(width * 0.68, height * 0.62, (width / 1280) * 0.3, levelId, 2);
-
-    this.createNextLevelButton();
+    //this.createStone(width * 0.23, height * 0.48, (width / 1280) * 0.9, levelId, 0);
+    //this.createStone(width * 0.73, height * 0.48, (width / 1280) * 0.9, levelId, 1);
+    // this.createStone(width * 0.68, height * 0.62, (width / 1280) * 0.7, levelId, 2);
   }
 
   createStone(x, y, scale, levelId, questionIndex) {
-    const stone = this.add.image(x, y, "question1p").setOrigin(0.5);
+    const stone = this.add.image(x, y, "question2p").setOrigin(0.5);
     stone.setScale(scale);
     stone.setDepth(2);
     stone.setInteractive({ useHandCursor: true });
@@ -266,128 +264,9 @@ export class Scene2 extends Phaser.Scene {
     });
   }
 
-  
-createNextLevelButton() {
-  const { width, height } = this.scale;
-  const levelId = 'lvl3'; // Change for each scene: lvl2, lvl3, lvl4, lvl5
-
-  // Create button in top-right corner
-  const button = this.add.rectangle(
-    width - 150,
-    50,
-    250,
-    60,
-    0x4a90e2
-  )
-    .setDepth(1000)
-    .setInteractive({ useHandCursor: true })
-    .setVisible(false); // Hidden by default
-
-  const buttonText = this.add.text(
-    width - 150,
-    50,
-    'Next Level →',
-    {
-      fontSize: '20px',
-      color: '#ffffff',
-      fontStyle: 'bold',
-    }
-  )
-    .setOrigin(0.5)
-    .setDepth(1001)
-    .setVisible(false);
-
-  // Button interactions
-  button.on('pointerover', function() {
-    this.setFillStyle(0x3b82f6);
-  });
-  
-  button.on('pointerout', function() {
-    this.setFillStyle(0x4a90e2);
-  });
-
-  button.on('pointerdown', async () => {
-    const result = await GameStateManager.tryAdvanceToNextScene(levelId);
-    
-    if (result.canAdvance && result.nextScene) {
-      console.log('✅ Advancing to:', result.nextScene);
-      this.scene.start(result.nextScene);
-    } else {
-      // Show message if can't advance
-      this.showMessage(result.message);
-    }
-  });
-
-  // ========================================
-  // CHECK EVERY 2 SECONDS IF LEVEL IS COMPLETE
-  // ========================================
-  this.time.addEvent({
-    delay: 2000,
-    callback: async () => {
-      const progress = await GameStateManager.checkLevelProgress(levelId);
-      
-      if (progress && progress.isComplete) {
-        // Show button when level is complete
-        button.setVisible(true);
-        buttonText.setVisible(true);
-        
-        // Add pulse animation
-        this.tweens.add({
-          targets: [button, buttonText],
-          scaleX: 1.1,
-          scaleY: 1.1,
-          duration: 500,
-          yoyo: true,
-          repeat: -1,
-        });
-      }
-    },
-    loop: true,
-  });
-}
-
-// ========================================
-// HELPER: SHOW MESSAGE ON SCREEN
-// ========================================
-showMessage(message) {
-  const { width, height } = this.scale;
-  
-  const bg = this.add.rectangle(
-    width / 2,
-    height / 2,
-    width * 0.6,
-    height * 0.2,
-    0x000000,
-    0.9
-  ).setDepth(2000);
-
-  const text = this.add.text(
-    width / 2,
-    height / 2,
-    message,
-    {
-      fontSize: '24px',
-      color: '#ffffff',
-      align: 'center',
-      wordWrap: { width: width * 0.5 },
-    }
-  )
-    .setOrigin(0.5)
-    .setDepth(2001);
-
-  // Auto-hide after 3 seconds
-  this.time.delayedCall(3000, () => {
-    bg.destroy();
-    text.destroy();
-  });
-}
-
   update() {
     if (this.spaceKey && Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
       this.dialogSystem?.showNextLine();
     }
   }
-
-
-  
 }

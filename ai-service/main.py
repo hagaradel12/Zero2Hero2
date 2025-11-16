@@ -384,7 +384,7 @@ from huggingface_hub import InferenceClient
 # ----------------------------------------------------
 load_dotenv()
 
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY2")
 MODEL_NAME = os.getenv("OPENROUTER_MODEL", "qwen/qwen-2.5-72b-instruct:free")
 
 app = FastAPI(title="AI Review Service")

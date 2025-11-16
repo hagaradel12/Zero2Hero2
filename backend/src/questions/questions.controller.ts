@@ -78,51 +78,64 @@ export class QuestionsController {
   //   if(!levelId) throw new BadRequestException('Missing levelId');
   //   return this.questionsService.finishQuestion(finalUserId, questionId, score, levelId);
   // }
+@Post(':questionId/finish')
+async finishQuestion(
+  @Param('questionId') questionId: string,
+  @Body() body: { userId: string; score: number; levelId: string }
+) {
+  const { userId, score, levelId } = body;
 
-  @Post(':questionId/finish')
-  async finishQuestion(
-    @Param('questionId') questionId: string,
-    @Body() body: { userId: string; score: number; levelId: string }
-  ) {
-    const { userId, score, levelId } = body;
+  try {
+    // ✅ FIXED: Use findById instead of findUserByEmail
+    const user = await this.usersService.findById(userId);
+    if (!user) throw new BadRequestException('User not found');
 
-    try {
-      // 1. Get user by ID
-      const user = await this.usersService.findUserByEmail(userId); // or findById if you prefer
-      if (!user) throw new BadRequestException('User not found');
-
-      // 2. Add question to solved list if not already there
-      if (!user.solvedQuestions.includes(questionId)) {
-        user.solvedQuestions.push(questionId);
-      }
-
-      // 3. Add XP for completing the question
-      const xpGain = score || 100;
-      const newXp = (user.xp || 0) + xpGain;
-
-      // 4. Update user with new data - KEEP currentLevel as the current level
-      await this.usersService.updateUserByEmail(user.email, {
-        solvedQuestions: user.solvedQuestions,
-        xp: newXp,
-        currentLevel: levelId, // Keep user in the same level (lvl2)
-      });
-
-      console.log(`✅ User finished question ${questionId} in ${levelId}`);
-      console.log(`✅ User will return to ${levelId}`);
-
-      return {
-        success: true,
-        message: 'Question completed successfully!',
-        xpGained: xpGain,
-        totalXp: newXp,
-        currentLevel: levelId, // Tell frontend which level user is in
-      };
-    } catch (error) {
-      console.error('❌ Error finishing question:', error);
-      return {
-        success: false,
-        message: error.message || 'Failed to finish question',
-      };
+    // 2. Add question to solved list if not already there
+    if (!user.solvedQuestions.includes(questionId)) {
+      user.solvedQuestions.push(questionId);
     }
+
+    // 3. Add XP for completing the question
+    const xpGain = score || 100;
+    const newXp = (user.xp || 0) + xpGain;
+
+    // 4. Update streak logic
+    const today = new Date().toDateString();
+    const lastActive = user.lastActiveDate
+      ? new Date(user.lastActiveDate).toDateString()
+      : null;
+
+    let newStreak = user.streak || 0;
+    if (!lastActive || today !== lastActive) {
+      const isNextDay =
+        lastActive &&
+        new Date(today).getTime() - new Date(lastActive).getTime() === 86400000;
+      newStreak = isNextDay ? newStreak + 1 : 1;
+    }
+
+    // 5. Update user with new data
+    await this.usersService.updateUserById(userId, {
+      solvedQuestions: user.solvedQuestions,
+      xp: newXp,
+      currentLevel: levelId,
+      streak: newStreak,
+      lastActiveDate: new Date(),
+    });
+
+    console.log(`✅ User finished question ${questionId} in ${levelId}`);
+    console.log(`✅ User will return to ${levelId}`);
+
+    return {
+      success: true,
+      message: 'Question completed successfully!',
+      xpGained: xpGain,
+      totalXp: newXp,
+      currentLevel: levelId,
+      streak: newStreak,
+    };
+  } catch (error) {
+    console.error('❌ Error finishing question:', error);
+    throw new BadRequestException(error.message || 'Failed to finish question');
   }
+}
 }

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
-import { Level } from "../levels/levels.schema"; // adjust the import path
+import { Level } from "../levels/levels.schema";
 
 export type UserDocument = HydratedDocument<Users>;
 
@@ -32,16 +32,33 @@ export class Users {
 
   // 🔥 Streak system
   @Prop({ type: Number, default: 0 })
-  streak: number; // consecutive days of activity
+  streak: number;
 
   @Prop({ type: Date, default: null })
-  lastActiveDate: Date | null; // used to calculate streak continuity
+  lastActiveDate: Date | null;
 
-  @Prop({type: Number, default:50})
+  @Prop({ type: Number, default: 50 })
   Hints: number;
 
   @Prop({ type: Number, default: 0 })
   currentQuestionIndex: number;
+
+  // ========================================
+  // ✅ NEW: GAME STATE FIELDS
+  // ========================================
+  @Prop({ type: String, default: 'IntroScene' })
+  currentScene: string;
+
+  @Prop({ type: String, default: 'lvl1' })
+  currentLevelId: string; // Scene identifier like "lvl2", "lvl3"
+
+  @Prop({ type: Object, default: {} })
+  completedQuestions: {
+    [levelId: string]: number[];
+  };
+
+  @Prop({ type: Date, default: Date.now })
+  gameStateLastUpdated: Date;
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users);
