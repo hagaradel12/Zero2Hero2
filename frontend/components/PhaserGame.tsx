@@ -5,7 +5,7 @@ interface PhaserGameProps {
   startScene?: string;
 }
 
-export default function PhaserGame({ startScene = "IntroScene" }: PhaserGameProps) {
+export default function PhaserGame({ startScene = "IntroRoom" }: PhaserGameProps) {
   const gameRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -15,7 +15,7 @@ export default function PhaserGame({ startScene = "IntroScene" }: PhaserGameProp
 
     const initPhaser = async () => {
       const Phaser = await import("phaser");
-      const configModule = await import("../game-interface/config/gameConfig");
+      const configModule = await import("../cybergame/config/config");
       const config = { ...configModule.default }; // Clone config
 
       // // ✅ Always load ALL scenes, let state manager decide which to start
